@@ -5,7 +5,8 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
 
-@SelectPackages("com/example/proyectotesting")
+
+@SelectPackages("com.example.proyectotesting")
 public class SuitTest {
 }
 
