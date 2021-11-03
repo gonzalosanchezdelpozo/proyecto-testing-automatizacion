@@ -80,15 +80,62 @@ class ProductRestControllerTest {
 
         }
    }
- /*
-    @Test
-    void create() {
-    }
+ @Nested
+ class saveTest {
+   @DisplayName("comprobamos que crea correctamente")
+     @Test
+     void createOk() {
+       String json = """
+                {
+                    "name": "Product Test",
+                    "description": "description example",
+                    "quantity": 9,
+                    "price": 9.99
+                }
+                """;
+ResponseEntity<Product> response=  testRestTemplate.postForEntity(PRODUCTSURL, createHttpRequest(json), Product.class);
+       assertEquals(201, response.getStatusCodeValue());
+       assertEquals(HttpStatus.CREATED, response.getStatusCode());
+       assertTrue(response.hasBody());
+       Product product = response.getBody();
+       assertNotNull(product);
+       assertEquals("Product Test", product.getName());
 
-    @Test
-    void update() {
-    }
+     }
+     @DisplayName("comprobamos que no crea con una badrequest")
+     @Test
+     void createBadRequest() {
+         String json = """
+                {
+                    "id": 5,
+                    "name": "Product BadRequest",
+                    "description": "description example",
+                    "quantity": 9,
+                    "price": 9.99
+                }
+                """;
+    ResponseEntity<Product> response=  testRestTemplate.postForEntity(PRODUCTSURL, createHttpRequest(json), Product.class);
+         assertEquals(400, response.getStatusCodeValue());
+         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+         assertFalse(response.hasBody());
+     }
+     @DisplayName("comprobamos que se modifica")
+     @Test
+     void update() {
 
+             Product product = createDemoProduct();
+             String json = String.format("""
+                {
+                    "id": %d,
+                    "name": "Product modified",
+                    "description": "description example",
+                    "quantity": 8,
+                    "price": 8.99
+                }
+                """, product.getId());
+             System.out.println(json);
+     }
+ }
     @Test
     void delete() {
     }
@@ -96,7 +143,7 @@ class ProductRestControllerTest {
     @Test
     void deleteAll() {
     }
-*/
+
 
     private Product createDemoProduct(){
         String json = """
@@ -115,5 +162,11 @@ class ProductRestControllerTest {
                 testRestTemplate.postForEntity(PRODUCTSURL, request, Product.class);
         return response.getBody();
     }
-
+    private HttpEntity<String> createHttpRequest(String json){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        HttpEntity<String> request = new HttpEntity<>(json, headers);
+        return request;
+    }
 }
