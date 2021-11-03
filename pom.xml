@@ -24,10 +24,18 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- jstl for jsp -->
-		<dependency>
+		<!--<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
+		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>9.0.54</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
