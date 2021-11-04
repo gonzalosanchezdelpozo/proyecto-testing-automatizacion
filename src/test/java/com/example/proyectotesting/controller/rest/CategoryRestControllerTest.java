@@ -245,7 +245,7 @@ public class CategoryRestControllerTest {
         void deleteNullIdTest() {
             Category category = createDataCategories();
 
-            String archive = Category_URL + "/9999" + category.getId();
+            String archive = Category_URL + "/800" + category.getId();
 
             ResponseEntity<Category> response = testRestTemplate.getForEntity(archive, Category.class);
 
