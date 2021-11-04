@@ -259,7 +259,7 @@ public class CategoryRestControllerTest {
 
 
         }
-        @DisplayName("comprobamos que borramos todos")
+        @DisplayName("comprobamos que borramos todas las categorias ")
         @Test
         void deleteAllSuccess() {
             createDataCategories();
