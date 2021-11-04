@@ -1,9 +1,8 @@
 package com.example.proyectotesting.controller.rest;
 
 import com.example.proyectotesting.entities.Manufacturer;
-import com.example.proyectotesting.entities.Product;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +34,7 @@ class ManufacturerRestControllerTest {
     }
 
 
-
+    @DisplayName("Comprobamos que recibimos todos los manufacturer")
     @Test
     void findAllTest() {
         createDemoManufacturer();
@@ -51,9 +50,18 @@ class ManufacturerRestControllerTest {
         assertNotNull(manufacturers);
         assertTrue(manufacturers.size() >=2);
     }
-
+    @DisplayName("Comprobamos que buscamos uno por ID ")
     @Test
-    void findOne() {
+    void findOneOkTest() {
+        Manufacturer manufacturer = createDemoManufacturer();
+        ResponseEntity<Manufacturer> response = testRestTemplate.getForEntity(MANUFACTURER_URL+"/"+manufacturer.getId(), Manufacturer.class);
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.hasBody());
+        Manufacturer result = response.getBody();
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertEquals(result.getId(), manufacturer.getId());
     }
 
     @Test
@@ -68,7 +76,7 @@ class ManufacturerRestControllerTest {
     void deleteAll() {
     }
 
-    private Product createDemoManufacturer(){
+    private Manufacturer createDemoManufacturer(){
         String json = """
                 {
                     "name": "Product de prueba",
@@ -81,15 +89,14 @@ class ManufacturerRestControllerTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<Product> response =
-                testRestTemplate.postForEntity(MANUFACTURER_URL, request, Product.class);
+        ResponseEntity<Manufacturer> response =
+                testRestTemplate.postForEntity(MANUFACTURER_URL, request, Manufacturer.class);
         return response.getBody();
     }
     private HttpEntity<String> createHttpRequest(String json){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        HttpEntity<String> request = new HttpEntity<>(json, headers);
-        return request;
+        return new HttpEntity<>(json, headers);
     }
 }
