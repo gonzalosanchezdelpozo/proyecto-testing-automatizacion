@@ -24,10 +24,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- jstl for jsp -->
-		<!--<dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-		</dependency>-->
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
 		<dependency>
