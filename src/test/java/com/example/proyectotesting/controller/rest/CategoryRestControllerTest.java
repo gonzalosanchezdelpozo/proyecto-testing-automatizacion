@@ -104,14 +104,14 @@ public class CategoryRestControllerTest {
         void createSuccesTest() {
             String json = """
                     {
-                        "name": " Categoria creada desde Rest Test",
+                        "name": "Categoria creada desde Rest Test",
                         "color": "Color maravilloso"
                     }
                     """;
             ResponseEntity<Category> respuesta = testRestTemplate.postForEntity(Category_URL, crearHttpRequest(json), Category.class);
 
-            assertEquals(201, respuesta.getStatusCodeValue());
-            assertEquals(HttpStatus.CREATED, respuesta.getStatusCode());
+            assertEquals(200, respuesta.getStatusCodeValue());
+            assertEquals(HttpStatus.OK, respuesta.getStatusCode());
             assertTrue(respuesta.hasBody());
 
             Category category = respuesta.getBody();
@@ -129,7 +129,7 @@ public class CategoryRestControllerTest {
         void createABadRequestTest() {
             String json = """
                     {
-                        "name": " Categoria BadRequest",
+                        "name": "Categoria BadRequest",
                         "color": "Color maravilloso"
                     }
                     """;
