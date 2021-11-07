@@ -126,7 +126,7 @@ public class CategoryRestControllerTest {
 
         @DisplayName("comprobamos que no crea una categoria porque hay un badrequest")
         @Test
-        void createABadRequestTest() {
+        void createNullTest() {
             String json = """
                     {
                         "name": "Categoria BadRequest",
@@ -172,7 +172,7 @@ public class CategoryRestControllerTest {
             Category responseProduct = response.getBody();
 
             assertEquals (category.getId(),responseProduct.getId() );
-            assertEquals("Product modified", responseProduct.getName());
+            assertEquals("Category Modified", responseProduct.getName());
             assertNotEquals(responseProduct.getName(), category.getName());
         }
 
@@ -255,7 +255,7 @@ public class CategoryRestControllerTest {
             ResponseEntity<Category> response2 = testRestTemplate.getForEntity(archive, Category.class);
             testRestTemplate.delete(archive);
 
-            assertFalse(archive.isEmpty());
+
 
 
         }
