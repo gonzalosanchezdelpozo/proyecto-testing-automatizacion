@@ -140,6 +140,25 @@ public class CategoryRestControllerTest {
             assertFalse(respuesta.hasBody());
         }
 
+        @Test
+        void createResponse400Test(){
+
+            String json = """
+                {
+                    "id": null,
+                    "name": "Category creado desde JUnit",
+                    "color": "color example"
+                }
+                """;
+
+            ResponseEntity<Category> response =
+                    testRestTemplate.postForEntity(Category_URL, crearHttpRequest(json), Category.class);
+
+           // assertEquals(400, response.getStatusCodeValue());
+            // assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+            assertFalse(response.hasBody());
+        }
+
 
     }
 
@@ -288,7 +307,7 @@ public class CategoryRestControllerTest {
     private Category createDataCategories() {
         String json = """
                 {
-                    "name": " Categoria creada desde Rest",
+                    "name": "Categoria creada desde Rest",
                     "color": "Color maravilloso"
                               
                 }
@@ -303,10 +322,11 @@ public class CategoryRestControllerTest {
     }
 
     private HttpEntity<String> crearHttpRequest(String json) {
-        HttpHeaders cabeceras = new HttpHeaders();
-        cabeceras.setContentType(MediaType.APPLICATION_JSON);
-        cabeceras.setAccept(List.of(MediaType.APPLICATION_JSON));
-        HttpEntity<String> request = new HttpEntity<>(json, cabeceras);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        HttpEntity<String> request = new HttpEntity<>(json, headers);
         return request;
     }
 }
