@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -74,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
         try{
             categoryRepository.deleteAll();
             return true;
-        }catch(Exception e){
+        }catch(NoSuchElementException e){
             e.printStackTrace();
         }
         return false;
