@@ -25,6 +25,7 @@ class CategoryServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        this.service = new CategoryServiceImpl(categoryRepository);
         System.out.println("Ejecutando test con Mockito");
     }
 
@@ -192,11 +193,53 @@ class CategoryServiceImplTest {
         verify(categoryRepository).count();
     }
 
+    @DisplayName("Comprobamos que no se borra un id null")
     @Test
-    void deleteById() {
+    void deleteByIdNullTest() {
+        service.deleteById(null);
+        boolean resultado = service.deleteById(null);
+        assertFalse(resultado);
+
     }
 
+    @DisplayName("Comprobamos que no se borra con el id de 40 ya que no deberia existir")
+    @Test
+    void notDeleteById40Test(){
+        when(categoryRepository.existsById(40L)).thenReturn(false);
+        boolean category = service.existsById(40L);
+        assertFalse(category);
+    }
+
+    @DisplayName("Comprobamos que se borra la categoria con id 1")
+    @Test
+    void deleteByIdSuccessTest() {
+        service.deleteById(1L);
+        boolean result = service.deleteById(1L);
+        List<Category> categoryDelete = service.findAll();
+        assertEquals(0, categoryDelete.size());
+
+    }
+
+    @DisplayName("Comprobamos que se borran todas las categorias")
     @Test
     void deleteAll() {
+       List<Category> categories = service.findAll();
+       boolean result = service.deleteAll();
+       assertTrue(result);
+       assertEquals(0,categories.size());
+       verify(categoryRepository).deleteAll();
+
     }
+
+    @DisplayName("Comprobamos que arroja una excepcion al no escontrar categorias")
+    @Test
+    void deleteAllExceptionTest() {
+        service.deleteAll();
+        when(service.deleteAll()).thenThrow(new IllegalArgumentException());
+
+        verify(categoryRepository).deleteAll();
+
+    }
+
+
 }
