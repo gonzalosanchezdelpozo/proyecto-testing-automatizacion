@@ -233,7 +233,7 @@ class CategoryServiceImplTest {
     @Test
     void deleteAllExceptionTest() {
         boolean result = service.deleteAll();
-        when(service.deleteAll()).thenThrow(new NoSuchElementException());
+        when(service.deleteAll()).thenThrow(new Exception());
 
         verify(categoryRepository).deleteAll();
         assertTrue(result);

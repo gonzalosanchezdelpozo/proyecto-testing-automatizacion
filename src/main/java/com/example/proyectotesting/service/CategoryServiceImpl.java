@@ -75,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
         try{
             categoryRepository.deleteAll();
             return true;
-        }catch(NoSuchElementException e){
+        }catch(Exception e){
             e.printStackTrace();
         }
         return false;
