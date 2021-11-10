@@ -128,7 +128,7 @@ public class CategoryRestControllerTest {
         @Test
         void createNullTest() {
             String json = """
-                    {
+                    {   "id": null,
                         "name": "Categoria BadRequest",
                         "color": "Color maravilloso"
                     }
@@ -145,17 +145,17 @@ public class CategoryRestControllerTest {
 
             String json = """
                 {
-                    "id": null,
+                    "id": 5,
                     "name": "Category creado desde JUnit",
                     "color": "color example"
                 }
                 """;
-
+// Id no debia ser nula
             ResponseEntity<Category> response =
                     testRestTemplate.postForEntity(Category_URL, crearHttpRequest(json), Category.class);
 
-           // assertEquals(400, response.getStatusCodeValue());
-            // assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+           assertEquals(400, response.getStatusCodeValue());
+             assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
             assertFalse(response.hasBody());
         }
 
@@ -229,7 +229,7 @@ public class CategoryRestControllerTest {
             System.out.println(json);
             ResponseEntity<Category> response =
                     testRestTemplate.exchange(Category_URL, HttpMethod.PUT, crearHttpRequest(json), Category.class);
-            assertEquals(405, response.getStatusCodeValue());
+            assertEquals(404, response.getStatusCodeValue());
             assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         }
 

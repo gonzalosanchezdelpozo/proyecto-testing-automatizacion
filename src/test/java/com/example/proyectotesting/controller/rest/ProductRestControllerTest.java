@@ -213,6 +213,7 @@ assertNotEquals(responseProduct.getName(), product.getName());
          assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     ResponseEntity<Product> response2 = testRestTemplate.getForEntity(archive, Product.class);
           testRestTemplate.delete(archive);
+
           assertFalse(archive.isEmpty());
 
 

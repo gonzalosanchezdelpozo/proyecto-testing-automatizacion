@@ -327,8 +327,6 @@ class ProductServiceImplTest {
             doThrow(RuntimeException.class).when(productRepository).deleteAll();
             boolean result = productService.deleteAll();
             assertThrows(Exception.class, () -> productRepository.deleteAll());
-           // when(productService.deleteAll()).thenThrow(new IllegalArgumentException());
-
             verify(productRepository,times(2)).deleteAll();
             assertFalse(result);
 
