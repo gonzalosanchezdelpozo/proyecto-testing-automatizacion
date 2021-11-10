@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,12 +26,16 @@ import static org.mockito.Mockito.*;
 class ProductServiceImplTest {
     ProductService productService;
     ProductRepository productRepository;
+    ManufacturerService manufacturerService;
+    ManufacturerRepository manufacturerRepository;
 
     @BeforeEach
     void setUp() {
         productRepository = mock(ProductRepository.class);
         this.productService = new ProductServiceImpl(productRepository);
-        Manufacturer made = new Manufacturer();
+
+        Manufacturer made = new Manufacturer("Nike","A250000",1000,1950);
+
         List<Product> products = Arrays.asList(
                 new Product("Balón", "futbol", 2, 10.99, made),
                 new Product("Balón2", "basket", 3, 16.99, made));
@@ -48,7 +55,7 @@ class ProductServiceImplTest {
     class findTest {
         @DisplayName("comprobamos que es capaz de encontrar todos los registros")
         @Test
-        void findAll() {
+        void findAllTest() {
             Manufacturer made = new Manufacturer();
             List<Product> products = Arrays.asList(
                     new Product("Balón", "futbol", 2, 10.99, made),
@@ -124,7 +131,7 @@ class ProductServiceImplTest {
         @DisplayName("comprobamos que no encuentra precios nulos")
         @Test
         void findByPriceBetweenNullTest() {
-            Double pricemin = 9.99;
+            Double pricemin = null;
             Double pricemax = 14.99;
             Manufacturer made = new Manufacturer();
             List<Product> products = new ArrayList<>();
@@ -141,7 +148,55 @@ class ProductServiceImplTest {
             List<Product> prices = productService.findByPriceBetween(pricemin, pricemax);
             System.out.println(prices);
             assertNull(prices);
+            assertTrue(prices.isEmpty());
         }
+
+        @DisplayName("comprobamos que no encuentra precios negativos")
+        @Test
+        void findByPricMinNegTest() {
+            Double pricemin = -9.99;
+            Double pricemax = 14.99;
+            Manufacturer made = new Manufacturer();
+            List<Product> products = new ArrayList<>();
+            Product product1 = new Product("Balón", "futbol", 2, 10.99, made);
+            product1.setId(1L);
+
+            products.add(product1);
+            Product product2 = (new Product("Balón2", "basket", 3, 16.99, made));
+            product1.setId(1L);
+
+            products.add(product2);
+            System.out.println(products);
+            List<Product> prices = productService.findByPriceBetween(pricemin, pricemax);
+            System.out.println(prices);
+            assertNotNull(prices);
+            assertTrue(prices.isEmpty());
+
+        }
+        @DisplayName("comprobamos que no encuentra con precio menor mayor que el superior")
+        @Test
+        void findByPricMinMaxTest() {
+            Double pricemin = 19.99;
+            Double pricemax = 14.99;
+            Manufacturer made = new Manufacturer();
+            List<Product> products = new ArrayList<>();
+            Product product1 = new Product("Balón", "futbol", 2, 10.99, made);
+            product1.setId(1L);
+
+            products.add(product1);
+            Product product2 = (new Product("Balón2", "basket", 3, 16.99, made));
+            product1.setId(1L);
+
+            products.add(product2);
+            System.out.println(products);
+            List<Product> prices = productService.findByPriceBetween(pricemin, pricemax);
+
+            assertNotNull(prices);
+            assertTrue(prices.isEmpty());
+
+
+        }
+
 
         @DisplayName("comprobamos que no encuentra productos con manufacturer nulo")
         @Test
@@ -150,6 +205,7 @@ class ProductServiceImplTest {
             List<Product> manufacturer = productService.findByManufacturer(null);
             assertTrue(manufacturer.isEmpty());
         }
+
 
         @DisplayName("comprobamos que no calcula los portes con producto nulo")
         @Test
@@ -206,6 +262,7 @@ class ProductServiceImplTest {
             Product result = productService.save(product1);
             assertNotNull(result);
             assertEquals("Balón Test", result.getName());
+            verify(productRepository).save(product1);
 
         }
     }
@@ -232,19 +289,47 @@ class ProductServiceImplTest {
 
 
         }
+
+        @DisplayName("comprobamos que no borra con una Id que no debe existir")
+        @Test
+        void deleteByIdOutOfBoundsTest() {
+            when(productRepository.existsById(99L)).thenReturn(false);
+            boolean result = productService.deleteById(1L);
+            assertFalse(result);
+
+        }
+        @DisplayName("comprobamos que devuelve una excepción al intentar  borrar todos los productos")
+        @Test
+        void deleteIdExceptTest() {
+            doThrow(RuntimeException.class).when(productRepository).deleteById(any());
+            boolean result = productService.deleteById(1L);
+            assertThrows(Exception.class, () -> productRepository.deleteById(1L));
+           when(productService.deleteById(anyLong())).thenThrow(new IllegalArgumentException());
+            verify(productRepository, times(1)).deleteById(1L);
+            assertFalse(result);
+
+        }
+
         @DisplayName("comprobamos que  borra todos los productos")
         @Test
         void deleteAllOk() {
-            productService.deleteAll();
+            //productService.deleteAll();
+            List<Product> borrado = productService.findAll();
+            boolean result = productService.deleteAll();
+            assertTrue(result);
+            assertEquals(0, borrado.size());
             verify(productRepository).deleteAll();
         }
         @DisplayName("comprobamos que devuelve una excepción al intentar  borrar todos los productos")
         @Test
         void deleteAllExceptTest() {
-            productService.deleteAll();
+            doThrow(RuntimeException.class).when(productRepository).deleteAll();
+            boolean result = productService.deleteAll();
+            assertThrows(Exception.class, () -> productRepository.deleteAll());
             when(productService.deleteAll()).thenThrow(new IllegalArgumentException());
 
-            verify(productRepository).deleteAll();
+            verify(productRepository,times(2));
+            assertFalse(result);
 
         }
 
