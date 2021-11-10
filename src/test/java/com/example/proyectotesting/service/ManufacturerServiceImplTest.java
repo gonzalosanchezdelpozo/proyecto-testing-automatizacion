@@ -3,6 +3,7 @@ package com.example.proyectotesting.service;
 import com.example.proyectotesting.entities.Manufacturer;
 import com.example.proyectotesting.repository.ManufacturerRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -23,9 +24,9 @@ class ManufacturerServiceImplTest {
        manufacturerRepository = mock(ManufacturerRepository.class);
        this.manufacturerService = new ManufacturerServiceImpl(manufacturerRepository);
 
-        List<Manufacturer> manufacturers = Arrays.asList(
-                new Manufacturer("name1","cif1", 5,2021),
-                new Manufacturer("name2", "cif2", 3, 2019));
+       // List<Manufacturer> manufacturers = Arrays.asList(
+                //new Manufacturer("name1","cif1", 5,2021),
+               // new Manufacturer("name2", "cif2", 3, 2019));
 
     }
 
@@ -36,6 +37,14 @@ class ManufacturerServiceImplTest {
 
         assertNotNull(result);
         assertEquals(2,result);
+    }
+    @DisplayName("Comprobar cuando cuenta lista de manufacturers vacía")
+    @Test
+    void countNullTest() {
+        when(manufacturerRepository.count()).thenReturn(0L);
+        Long result = manufacturerService.count();
+        assertNotNull(result);
+        assertEquals(0, result);
     }
 
     @Test
@@ -112,9 +121,17 @@ class ManufacturerServiceImplTest {
 
     @Test
     void deleteById() {
-    //when(manufacturerService.deleteById(1L)
-      //      .thenReturn(manufacturerService.deleteById(1L);
-    //verify(manufacturerRepository).deleteById(1L);
+       manufacturerService.deleteById(anyLong());
+        boolean result = manufacturerService.deleteById(anyLong());
+        assertFalse(result);
+    }
+
+    @DisplayName("Comprobar que no borra con una Id nula")
+    @Test
+    void deleteByIdNullTest() {
+        manufacturerService.deleteById(null);
+        boolean result = manufacturerService.deleteById(null);
+        assertFalse(result);
     }
 
     @Test
@@ -127,9 +144,28 @@ class ManufacturerServiceImplTest {
     }
 
     @Test
-    void deleteAll() {
-        manufacturerService.deleteAll();
-        verify(manufacturerRepository).deleteAll();
+    void findManufacturerByCountryNullTest() {
+        List<Manufacturer> manufacturers = manufacturerRepository.findManufacturerByDirectionCountry(null);
 
+        verify(manufacturerRepository).findManufacturerByDirectionCountry(null);
+    }
+
+    @Test
+    void deleteAllOK() {
+        boolean result = manufacturerService.deleteAll();
+         assertTrue(result);
+        verify(manufacturerRepository).deleteAll();
+    }
+
+    @DisplayName("Comprobamos que arroja una excepcion al no escontrar manufacterers")
+    @Test
+    void deleteAllExceptionTest() {
+
+        doThrow(RuntimeException.class).when(manufacturerRepository).deleteAll();
+
+        boolean result = manufacturerService.deleteAll();
+        assertThrows(Exception.class, () -> manufacturerRepository.deleteAll());
+        verify(manufacturerRepository, times(2)).deleteAll();
+        assertFalse(result);
     }
 }

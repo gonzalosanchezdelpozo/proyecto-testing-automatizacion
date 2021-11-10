@@ -1,5 +1,6 @@
 package com.example.proyectotesting.controller.rest;
 
+import com.example.proyectotesting.entities.Category;
 import com.example.proyectotesting.entities.Manufacturer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -58,15 +59,39 @@ class ManufacturerRestControllerTest {
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.hasBody());
+
         Manufacturer result = response.getBody();
+
         assertNotNull(result);
         assertNotNull(result.getId());
         assertEquals(result.getId(), manufacturer.getId());
     }
 
+    @DisplayName("Comprobamos que se crea correctamente un manufacturer")
     @Test
-    void create() {
+    void createOkTest() {
+        String json = """
+                {
+                    "name": "Manufacturer creado desde Rest Test",
+                    "cif": "123455678966",
+                    "num employess": 8,
+                    "year": 2009
+                }
+                """;
+        ResponseEntity<Manufacturer> response = testRestTemplate.postForEntity(MANUFACTURER_URL, createHttpRequest(json), Manufacturer.class);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.hasBody());
+
+        Manufacturer manufacturer = response.getBody();
+
+        assertNotNull(manufacturer);
+        assertEquals("Manufacturer creado desde Rest Test", manufacturer.getName());
+
+
     }
+
 
     @Test
     void update() {
@@ -79,10 +104,10 @@ class ManufacturerRestControllerTest {
     private Manufacturer createDemoManufacturer(){
         String json = """
                 {
-                    "name": "Product de prueba",
-                    "description": "description check",
-                    "quantity": 5,
-                    "price": 9.99
+                    "name": "Manufacturer de prueba",
+                    "cif": "1234556789",
+                    "num employess": 5,
+                    "year": 2012
                 }
                 """;
         HttpHeaders headers = new HttpHeaders();
