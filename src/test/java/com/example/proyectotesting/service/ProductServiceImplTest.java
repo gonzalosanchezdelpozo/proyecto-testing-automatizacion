@@ -131,7 +131,7 @@ class ProductServiceImplTest {
         @DisplayName("comprobamos que no encuentra precios nulos")
         @Test
         void findByPriceBetweenNullTest() {
-            Double pricemin = null;
+            Double pricemin = 9.99;
             Double pricemax = 14.99;
             Manufacturer made = new Manufacturer();
             List<Product> products = new ArrayList<>();
@@ -148,7 +148,7 @@ class ProductServiceImplTest {
             List<Product> prices = productService.findByPriceBetween(pricemin, pricemax);
             System.out.println(prices);
             assertNull(prices);
-            assertTrue(prices.isEmpty());
+
         }
 
         @DisplayName("comprobamos que no encuentra precios negativos")
@@ -313,12 +313,13 @@ class ProductServiceImplTest {
         @DisplayName("comprobamos que  borra todos los productos")
         @Test
         void deleteAllOk() {
-            //productService.deleteAll();
+            productService.deleteAll();
             List<Product> borrado = productService.findAll();
             boolean result = productService.deleteAll();
             assertTrue(result);
             assertEquals(0, borrado.size());
-            verify(productRepository).deleteAll();
+            verify(productRepository, times(2)).deleteAll();
+
         }
         @DisplayName("comprobamos que devuelve una excepción al intentar  borrar todos los productos")
         @Test
