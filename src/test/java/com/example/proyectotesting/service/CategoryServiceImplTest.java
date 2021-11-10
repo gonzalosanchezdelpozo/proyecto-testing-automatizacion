@@ -40,16 +40,16 @@ class CategoryServiceImplTest {
     @Test
     void findAllTest() {
         List<Category> categories = Arrays.asList(
-                new Category("Categoria1", "Azul"),
-                new Category("Categoria2", "Verde"),
-                new Category("Categoria3", "Rojo")
+                new Category("Category1", "Blue"),
+                new Category("Category2", "Green"),
+                new Category("Category3", "Red")
         );
 
         when(categoryRepository.findAll()).thenReturn(categories);
 
-        List<Category> resultado = service.findAll();
+        List<Category> result = service.findAll();
 
-        assertEquals(3, resultado.size());
+        assertEquals(3, result.size());
         verify(categoryRepository).findAll();
     }
 
@@ -79,8 +79,8 @@ class CategoryServiceImplTest {
     @Test
     void findByIdTest() {
         List<Category> categories = new ArrayList<>();
-        Category c1 = new Category("Categoria1 Moderna", "Color Vintage");
-        Category c2 = new Category("Categoria2 Antigua", "Color Blanco y Negro");
+        Category c1 = new Category("Category Moderna", "Color Vintage");
+        Category c2 = new Category("Category Antigua", "Color White and Black");
 
         System.out.println(categories + "\n");
 
@@ -92,8 +92,8 @@ class CategoryServiceImplTest {
 
         assertEquals(2, categories.size());
 
-        System.out.println("Categoria 1 :" + c1 + "\n" +
-                "Categoria2: " + c2);
+        System.out.println("Category 1 :" + c1 + "\n" +
+                "Category 2: " + c2);
         Optional<Category> categoryOpt1 = service.findOne(1L);
         Optional<Category> categoryOpt2 = service.findOne(2L);
 
@@ -117,7 +117,7 @@ class CategoryServiceImplTest {
 
     @DisplayName("Comprobamos que no existe ninguna id que enmpiece por 0")
     @Test
-    void existByIdCeroTest() {
+    void existByIdZeroTest() {
         when(categoryRepository.existsById(0L)).thenReturn(false);
         boolean category = service.existsById(0L);
         assertFalse(category);
@@ -151,28 +151,28 @@ class CategoryServiceImplTest {
     @DisplayName("Comprobamos que se encuentra el color que queremos")
     @Test
     void findByColorSuccessTest() {
-        Optional<Category> categoryOpt = service.findOne("Azul");
-        when(categoryRepository.findByColor("Azul")).thenReturn(categoryOpt);
+        Optional<Category> categoryOpt = service.findOne("Blue");
+        when(categoryRepository.findByColor("Blue")).thenReturn(categoryOpt);
         assertNotNull(categoryOpt);
-        verify(categoryRepository).findByColor("Azul");
+        verify(categoryRepository).findByColor("Blue");
     }
 
 
     @DisplayName("Comprobando que se guardan correctamente las categorias")
     @Test
     void saveSuccessTest() {
-        Category c1 = new Category("Categoria 1", "Color Blanco");
+        Category c1 = new Category("Category 1", "Color White");
         when(categoryRepository.save(any())).thenReturn(c1);
-        Category resultado = service.save(c1);
-        assertNotNull(resultado);
-        assertEquals("Categoria 1", resultado.getName());
+        Category result = service.save(c1);
+        assertNotNull(result);
+        assertEquals("Category 1", result.getName());
         verify(categoryRepository).save(c1);
     }
 
     @DisplayName("Comprobamos que no se puede guardar una categoria null")
     @Test
     void saveNullTest() {
-        Category c1 = new Category("Categoria 1", "Color Blanco");
+
         when(categoryRepository.save(any())).thenReturn(null);
         Category result = service.save(null);
         assertNull(result);
@@ -183,8 +183,8 @@ class CategoryServiceImplTest {
     @Test
     void count() {
         when(categoryRepository.count()).thenReturn(2L);
-        long resultado = service.count();
-        assertEquals(2L, resultado);
+        long result = service.count();
+        assertEquals(2L, result);
         verify(categoryRepository).count();
     }
 
@@ -192,8 +192,8 @@ class CategoryServiceImplTest {
     @Test
     void deleteByIdNullTest() {
         service.deleteById(null);
-        boolean resultado = service.deleteById(null);
-        assertFalse(resultado);
+        boolean result = service.deleteById(null);
+        assertFalse(result);
 
     }
 
