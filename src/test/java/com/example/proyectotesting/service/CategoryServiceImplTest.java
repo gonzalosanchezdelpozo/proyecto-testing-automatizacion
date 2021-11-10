@@ -158,6 +158,7 @@ class CategoryServiceImplTest {
     }
 
 
+    @DisplayName("Comprobando que se guardan correctamente las categorias")
     @Test
     void saveSuccessTest() {
         Category c1 = new Category("Categoria 1", "Color Blanco");
