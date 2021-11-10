@@ -1,16 +1,13 @@
 package com.example.proyectotesting.service;
 
 import com.example.proyectotesting.entities.Category;
-import com.example.proyectotesting.entities.Manufacturer;
-import com.example.proyectotesting.entities.Product;
 import com.example.proyectotesting.repository.CategoryRepository;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,21 +63,21 @@ class CategoryServiceImplTest {
 
     @DisplayName("Comprobando que no hay un id con numero 0 en categorias")
     @Test
-    void findOneIdCeroTest(){
+    void findOneIdCeroTest() {
         Optional<Category> categoryOpt = service.findOne(0L);
         assertEquals(Optional.empty(), categoryOpt);
     }
 
     @DisplayName("Comprobando que no hay un id 5 que sea negativo en categorias")
     @Test
-    void findOneNegativeIdTest(){
+    void findOneNegativeIdTest() {
         Optional<Category> categoryOpt = service.findOne(-5L);
         assertEquals(Optional.empty(), categoryOpt);
     }
 
     @DisplayName("Comprobamos que en la DB de categorias estan los id que pedimos ")
     @Test
-    void findByIdTest(){
+    void findByIdTest() {
         List<Category> categories = new ArrayList<>();
         Category c1 = new Category("Categoria1 Moderna", "Color Vintage");
         Category c2 = new Category("Categoria2 Antigua", "Color Blanco y Negro");
@@ -93,7 +90,7 @@ class CategoryServiceImplTest {
         categories.add(c1);
         categories.add(c2);
 
-        assertEquals(2,categories.size());
+        assertEquals(2, categories.size());
 
         System.out.println("Categoria 1 :" + c1 + "\n" +
                 "Categoria2: " + c2);
@@ -120,7 +117,7 @@ class CategoryServiceImplTest {
 
     @DisplayName("Comprobamos que no existe ninguna id que enmpiece por 0")
     @Test
-    void existByIdCeroTest(){
+    void existByIdCeroTest() {
         when(categoryRepository.existsById(0L)).thenReturn(false);
         boolean category = service.existsById(0L);
         assertFalse(category);
@@ -137,7 +134,7 @@ class CategoryServiceImplTest {
 
     @DisplayName("Comprobamos que no existe una categoria con id 50")
     @Test
-    void existById50Test(){
+    void existById50Test() {
         when(categoryRepository.existsById(50L)).thenReturn(false);
         boolean category = service.existsById(50L);
         assertFalse(category);
@@ -153,7 +150,7 @@ class CategoryServiceImplTest {
 
     @DisplayName("Comprobamos que se encuentra el color que queremos")
     @Test
-    void findByColorSuccessTest(){
+    void findByColorSuccessTest() {
         Optional<Category> categoryOpt = service.findOne("Azul");
         when(categoryRepository.findByColor("Azul")).thenReturn(categoryOpt);
         assertNotNull(categoryOpt);
@@ -162,8 +159,8 @@ class CategoryServiceImplTest {
 
 
     @Test
-    void saveSuccessTest(){
-        Category c1 = new Category("Categoria 1","Color Blanco");
+    void saveSuccessTest() {
+        Category c1 = new Category("Categoria 1", "Color Blanco");
         when(categoryRepository.save(any())).thenReturn(c1);
         Category resultado = service.save(c1);
         assertNotNull(resultado);
@@ -174,7 +171,7 @@ class CategoryServiceImplTest {
     @DisplayName("Comprobamos que no se puede guardar una categoria null")
     @Test
     void saveNullTest() {
-        Category c1 = new Category("Categoria 1","Color Blanco");
+        Category c1 = new Category("Categoria 1", "Color Blanco");
         when(categoryRepository.save(any())).thenReturn(null);
         Category result = service.save(null);
         assertNull(result);
@@ -201,7 +198,7 @@ class CategoryServiceImplTest {
 
     @DisplayName("Comprobamos que no se borra con el id de 40 ya que no deberia existir")
     @Test
-    void notDeleteById40Test(){
+    void notDeleteById40Test() {
         when(categoryRepository.existsById(40L)).thenReturn(false);
         boolean category = service.existsById(40L);
         assertFalse(category);
@@ -220,23 +217,25 @@ class CategoryServiceImplTest {
     @DisplayName("Comprobamos que se borran todas las categorias")
     @Test
     void deleteAll() {
-       List<Category> categories = service.findAll();
-       boolean result = service.deleteAll();
-       assertTrue(result);
-       assertEquals(0,categories.size());
-       verify(categoryRepository).deleteAll();
+        List<Category> categories = service.findAll();
+        boolean result = service.deleteAll();
+        assertTrue(result);
+        assertEquals(0, categories.size());
+        verify(categoryRepository).deleteAll();
 
     }
 
     @DisplayName("Comprobamos que arroja una excepcion al no escontrar categorias")
-    @Disabled("Resolver esto cuando se pueda")
     @Test
     void deleteAllExceptionTest() {
-        boolean result = service.deleteAll();
-        when(service.deleteAll()).thenThrow(new Exception());
 
-        verify(categoryRepository).deleteAll();
-        assertTrue(result);
+        doThrow(RuntimeException.class).when(categoryRepository).deleteAll();
+
+        boolean result = service.deleteAll();
+        assertThrows(Exception.class, () -> categoryRepository.deleteAll());
+        verify(categoryRepository, times(2)).deleteAll();
+        assertFalse(result);
+
 
     }
 
