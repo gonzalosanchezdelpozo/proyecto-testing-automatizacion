@@ -54,7 +54,7 @@ class CategoryServiceImplTest {
     }
 
 
-    @Disabled("findOneOptional()->Comprobando que no hay una categoria null")
+    @DisplayName("findOneOptional()->Comprobando que no hay una categoria null")
     @Test
     void findOneNullTest() {
         Optional<Category> categoryOpt = service.findOne((Long) null);
