@@ -95,16 +95,16 @@ class BookShopTest {
 
     @DisplayName("Comprobamos que se arroja una excepcion si no se encuentra un libro")
     @Test
-    void bookExceptionTest(){
-//        Book b1 = new Book("888", "Vicente", 2040);
-//        BookShop book_shop = new BookShop();
-//        book_shop.addBook(b1);
-//        Iterator<Book> iter = book_shop.iterator();
-//
-//
-//
+    void bookExceptionTest() {
+        Book b1 = new Book("888", "Vicente", 2040);
+        BookShop book_shop = new BookShop();
+        book_shop.addBook(b1);
+        Iterator<Book> iter = book_shop.iterator();
+        b1 = iter.next();
+
+
 //        //assertDoesNotThrow((Executable) iter.next());
-//        assertThrows(NoSuchElementException.class, () -> iter.hasNext());
-//        assertFalse(iter.hasNext());
+        assertThrows(NoSuchElementException.class, () -> iter.next());
+        assertFalse(iter.hasNext());
     }
 }
