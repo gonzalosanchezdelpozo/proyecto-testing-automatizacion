@@ -30,6 +30,8 @@ public class Category implements Serializable{
 	
 	public Category() {}
 
+
+
 	public Category(String name, String color) {
 		super();
 		this.name = name;
