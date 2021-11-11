@@ -1,4 +1,4 @@
-package com.example.proyectotesting.patterns.structural.adapter;
+package com.example.proyectotesting.patterns_test.structural.adapter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
