@@ -1,10 +1,7 @@
 package com.example.proyectotesting.controller.rest;
 
 import com.example.proyectotesting.entities.Category;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -123,7 +120,7 @@ public class CategoryRestControllerTest {
         }
 
 
-
+@Disabled
         @DisplayName("comprobamos que no crea una categoria porque hay un badrequest")
         @Test
         void createNullTest() {
