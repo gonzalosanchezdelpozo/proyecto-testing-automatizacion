@@ -67,6 +67,17 @@ class ManufacturerRestControllerTest {
         assertEquals(result.getId(), manufacturer.getId());
     }
 
+    @Test
+    @DisplayName("Buscamos por un ID que no existe ")
+    void findOneNotFound() {
+        ResponseEntity<Manufacturer> response =
+                testRestTemplate.getForEntity(MANUFACTURER_URL + "/666", Manufacturer.class);
+
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertFalse(response.hasBody());
+    }
+
     @DisplayName("Comprobamos que se crea correctamente un manufacturer")
     @Test
     void createOkTest() {
@@ -95,6 +106,26 @@ class ManufacturerRestControllerTest {
 
     @Test
     void update() {
+        Manufacturer manufacturer = createDemoManufacturer();
+        String json = String.format("""
+                {
+                    "id": %d,
+                    "name": "Manufacturer EDITADO",
+                    "cif": "2343235325G",
+                    "numEmployees": 550,
+                    "year": 1944
+                }
+                """, manufacturer.getId());
+        ResponseEntity<Manufacturer> response =
+                testRestTemplate.exchange(MANUFACTURER_URL, HttpMethod.PUT, createHttpRequest(json), Manufacturer.class);
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.hasBody());
+        assertNotNull(response.getBody());
+        Manufacturer responseManufacturer = response.getBody();
+        assertEquals(manufacturer.getId(), responseManufacturer.getId());
+        assertEquals("Manufacturer EDITADO", responseManufacturer.getName());
+        assertNotEquals(responseManufacturer.getName(), manufacturer.getName());
     }
 
     @Test
