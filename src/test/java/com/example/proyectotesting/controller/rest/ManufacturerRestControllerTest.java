@@ -2,6 +2,7 @@ package com.example.proyectotesting.controller.rest;
 
 import com.example.proyectotesting.entities.Category;
 import com.example.proyectotesting.entities.Manufacturer;
+import com.example.proyectotesting.entities.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -127,9 +128,75 @@ class ManufacturerRestControllerTest {
         assertEquals("Manufacturer EDITADO", responseManufacturer.getName());
         assertNotEquals(responseManufacturer.getName(), manufacturer.getName());
     }
+    @Test
+    void updateBadRequest() {
+        String json = """
+                {
+                    "id": null,
+                    "name": "Manufacturer EDITADO",
+                   "cif": "2343235325G",
+                    "numEmployees": 550,
+                    "year": 1944
+                }
+                """;
+        ResponseEntity<Manufacturer> response =
+                testRestTemplate.exchange(MANUFACTURER_URL, HttpMethod.PUT, createHttpRequest(json), Manufacturer.class);
+        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertFalse(response.hasBody());
+    }
 
     @Test
     void deleteAll() {
+        createDemoManufacturer();
+        createDemoManufacturer();
+
+        ResponseEntity<Manufacturer[]> response = testRestTemplate.getForEntity(MANUFACTURER_URL, Manufacturer[].class);
+
+        assertNotNull(response.getBody());
+
+        List<Manufacturer> manufacturers = List.of(response.getBody());
+        assertTrue(manufacturers.size() >= 2);
+        testRestTemplate.delete(MANUFACTURER_URL);
+        response = testRestTemplate.getForEntity(MANUFACTURER_URL, Manufacturer[].class);
+        assertNotNull(response.getBody());
+        manufacturers = List.of(response.getBody());
+        assertEquals(0, manufacturers.size());
+    }
+        @Test
+        void deleteByIdSuccess() {
+            Manufacturer manufacturer =createDemoManufacturer();
+            String archive = MANUFACTURER_URL + "/" + manufacturer.getId();
+            ResponseEntity<Manufacturer> response = testRestTemplate.getForEntity(archive, Manufacturer.class);
+
+            assertEquals(200, response.getStatusCodeValue());
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(manufacturer.getId(), response.getBody().getId());
+
+            testRestTemplate.delete(archive);
+
+            ResponseEntity<Manufacturer> response2 = testRestTemplate.getForEntity(archive, Manufacturer.class);
+
+            assertEquals(404, response2.getStatusCodeValue());
+            assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
+            assertFalse(response2.hasBody());
+
+        }
+
+    @DisplayName("comprobamos que no borra con Id null")
+    @Test
+    void deleteByIdNullTest() {
+        Manufacturer manufacturer = createDemoManufacturer();
+        String archive = MANUFACTURER_URL + "/9999" + manufacturer.getId();
+        ResponseEntity<Manufacturer> response = testRestTemplate.getForEntity(archive, Manufacturer.class);
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseEntity<Manufacturer> response2 = testRestTemplate.getForEntity(archive, Manufacturer.class);
+        testRestTemplate.delete(archive);
+
+        assertFalse(archive.isEmpty());
+
+
     }
 
     private Manufacturer createDemoManufacturer(){
