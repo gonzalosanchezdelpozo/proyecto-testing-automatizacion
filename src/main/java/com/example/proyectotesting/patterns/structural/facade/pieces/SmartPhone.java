@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmartPhone {
-	
+
 	private Battery battery;
 	private CPU cpu;
 	private Screen screen;
 	private List<Sensor> sensors = new ArrayList<>();
 	private Boolean on;
-	
-	
+
+
 	public SmartPhone(Battery battery, CPU cpu, Screen screen, List<Sensor> sensors) {
 		super();
 		this.battery = battery;
@@ -24,7 +24,7 @@ public class SmartPhone {
 	public void start() {
 		this.on = true;
 	}
-	
+
 	public void stop() {
 		this.on = false;
 	}
@@ -78,9 +78,6 @@ public class SmartPhone {
 	public void setOn(Boolean on) {
 		this.on = on;
 	}
-	
-	
-	
-	
-
 }
+
+

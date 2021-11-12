@@ -1,5 +1,6 @@
-package com.example.proyectotesting.patterns.structural.decorator;
+package com.example.proyectotesting.patterns_test.structural.decorator;
 
+import com.example.proyectotesting.patterns.structural.decorator.DigitalPhoto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
