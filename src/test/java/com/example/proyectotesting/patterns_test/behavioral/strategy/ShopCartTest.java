@@ -1,6 +1,8 @@
 package com.example.proyectotesting.patterns_test.behavioral.strategy;
 
 
+import com.example.proyectotesting.patterns.behavioral.strategy.CreditCardStrategy;
+import com.example.proyectotesting.patterns.behavioral.strategy.PayPalStrategy;
 import com.example.proyectotesting.patterns.behavioral.strategy.Product;
 import com.example.proyectotesting.patterns.behavioral.strategy.ShopCart;
 import org.junit.jupiter.api.AfterEach;
@@ -90,5 +92,31 @@ public class ShopCartTest {
 
 
     }
+
+
+    @DisplayName("Comproabando que funciona la estrategia de pago utilizada ")
+    @Test
+    void payTest(){
+        ShopCart shop_cart = new ShopCart();
+
+        Product p1 = new Product("1111222333",45);
+        Product p2 = new Product("444555333",50);
+
+        shop_cart.addProduct(p1);
+        shop_cart.addProduct(p2);
+
+        // Crear y ejecutar estrategia (método de pago): PayPal
+        shop_cart.pay(new PayPalStrategy("","",""));
+
+        // Crear y ejecutar estrategia (método de pago): Tarjeta de crédito
+        shop_cart.pay(new CreditCardStrategy("","","", ""));
+
+        // Si la interfaz tiene un solo método entonces es una interfaz funcional y por
+        // tanto se pueden utilizar lambdas, ahorrando así tener que crear las implementaciones estrategia
+        shop_cart.pay(
+                (amount) -> System.out.println(amount)
+        );
+    }
+
 
 }
