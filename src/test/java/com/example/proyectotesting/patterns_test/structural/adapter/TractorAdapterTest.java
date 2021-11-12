@@ -21,7 +21,6 @@ class TractorAdapterTest {
     @DisplayName("Speeds up a primera marcha")
     void speedUp1Gear() {
         try {
-            tractorAdapter = new TractorAdapter();
             tractorAdapter.speedUp(14);
             assertTrue(true);
         }catch(Exception error){
@@ -33,7 +32,6 @@ class TractorAdapterTest {
     @DisplayName("Speeds up a segunda marchar")
     void speedUp2Gear() {
         try {
-            tractorAdapter = new TractorAdapter();
             tractorAdapter.speedUp(17);
             assertTrue(true);
         }catch(Exception error){
