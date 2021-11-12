@@ -23,7 +23,7 @@ public class Weather {
     }
 
     // cambio de tiempo
-    void changeWeather(WeatherType currentWeather){
+    public void changeWeather(WeatherType currentWeather){
         this.currentWeather = currentWeather;
         this.notifyObservers();
     }

@@ -48,15 +48,21 @@ public class WeatherTest {
         assertNotEquals(1, observers.size());
         weather.removeObserver(obs);
 
+
     }
 
     @DisplayName("Comprobando que se cambia el tiempo")
     @Test
     void changeWeatherTest(){
-        WeatherObserver computer = new Computer();
         Weather weather = new Weather();
-        computer.update(WeatherType.SUNNY);
-        weather.addObserver(computer);
+        weather.changeWeather(WeatherType.SUNNY);
+        assertNotNull(weather);
+
+        WeatherObserver obs = new Computer();
+        obs.update(WeatherType.RAINY);
+        obs.update(WeatherType.CLOUDY);
+       assertNotNull(obs);
+
 
 
 
