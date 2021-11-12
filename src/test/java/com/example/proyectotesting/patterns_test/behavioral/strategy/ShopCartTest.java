@@ -89,6 +89,7 @@ public class ShopCartTest {
         shop_cart.removeProduct(p2);
 
         assertNotNull(shop_cart);
+        assertEquals("444555333", p2.getSku());
 
 
     }
@@ -116,6 +117,10 @@ public class ShopCartTest {
         shop_cart.pay(
                 (amount) -> System.out.println(amount)
         );
+
+        assertEquals( 45,p1.getPrice());
+        assertNotNull(p1);
+        assertNotNull(p2);
     }
 
 
