@@ -19,6 +19,8 @@ public interface ManufacturerService {
 
     boolean deleteById(Long id);
 
+    boolean existsById(Long id);
+
     List<Manufacturer> findManufacturerByCountry(String country);
 
     boolean deleteAll();
