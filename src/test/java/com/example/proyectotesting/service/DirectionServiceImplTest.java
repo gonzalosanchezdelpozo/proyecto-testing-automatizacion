@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -170,17 +171,17 @@ class DirectionServiceImplTest {
             assertFalse(result);
         }
 
-        @DisplayName("Coprobar que  borra por una Id")
+        @DisplayName("Comprobar que  borra por una Id")
         @Test
         void deleteByIdOkTest() {
-        //    List<Direction> directions = Arrays.asList(
-        //            new Direction("León y Castillo", "35003", "Las Palmas de G.C.", "España"),
-        //            new Direction("Mesa y López", "35007","Las Palmas de G.C.", "España"));
 
-            //when(directionService.deleteById(any())).thenReturn(true);
+            Direction direction1 = new Direction("León y Castillo", "35003", "Las Palmas de G.C.", "España");
 
-        //    boolean result = directionService.deleteById(1L);
-        //    assertTrue(result);
+            Optional<Direction> directionoptional = Optional.of(direction1);
+            when(directionRepository.findById(0L)).thenReturn(directionoptional);
+
+            boolean ok = directionService.deleteById(0L);
+            assertTrue(ok);
         }
 
         @DisplayName("Comprobar que borra todas las direcciones")
@@ -193,12 +194,13 @@ class DirectionServiceImplTest {
         @DisplayName("Comprobar la excepción al borrar todas las direcciones")
         @Test
         void deleteAllExceptionTest() {
-            when(directionService.deleteAll()).thenThrow(new IllegalArgumentException());
-            assertThrows(
-                    IllegalArgumentException.class,
-                    () -> directionRepository.deleteAll()
-            );
-            verify(directionRepository).deleteAll();
+                doThrow(RuntimeException.class).when(directionRepository).deleteAll();
+
+                boolean result = directionService.deleteAll();
+                assertThrows(Exception.class, () -> directionRepository.deleteAll());
+                verify(directionRepository, times(2)).deleteAll();
+                assertFalse(result);
+
         }
     }
 
