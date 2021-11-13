@@ -1,5 +1,6 @@
-package com.example.proyectotesting.patterns.creational.builder;
+package com.example.proyectotesting.patterns_test.creational.builder;
 
+import com.example.proyectotesting.patterns.creational.builder.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -72,8 +73,8 @@ class UserTest {
     }
     @Test
     void BuildersetIdTest() {
-       new User.Builder().setId(3L);
-       assertEquals(1L,usuario.getId());
+        new User.Builder().setId(3L);
+        assertEquals(1L,usuario.getId());
     }
 
 }
