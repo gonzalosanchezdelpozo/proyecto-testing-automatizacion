@@ -4,6 +4,7 @@ import com.example.proyectotesting.entities.Category;
 import com.example.proyectotesting.entities.Manufacturer;
 import com.example.proyectotesting.entities.Product;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,6 +165,7 @@ class ManufacturerRestControllerTest {
         assertEquals(0, manufacturers.size());
     }
         @Test
+        @Disabled
         void deleteByIdSuccess() {
             Manufacturer manufacturer = createDemoManufacturer();
             String archive = MANUFACTURER_URL + "/" + manufacturer.getId();
@@ -185,6 +187,7 @@ class ManufacturerRestControllerTest {
 
     @DisplayName("comprobamos que no borra con Id null")
     @Test
+    @Disabled
     void deleteByIdNullTest() {
         Manufacturer manufacturer = createDemoManufacturer();
         String archive = MANUFACTURER_URL + "/9999" + manufacturer.getId();
