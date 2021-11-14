@@ -4,6 +4,7 @@ import com.example.proyectotesting.entities.Category;
 import com.example.proyectotesting.entities.Manufacturer;
 import com.example.proyectotesting.entities.Product;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,18 +113,21 @@ class ManufacturerRestControllerTest {
                 {
                     "id": %d,
                     "name": "Manufacturer EDITADO",
-                    "cif": "2343235325G",
-                    "numEmployees": 550,
-                    "year": 1944
+                    "cif": "2344635325G",
+                   
                 }
                 """, manufacturer.getId());
+        System.out.println(json);
         ResponseEntity<Manufacturer> response =
                 testRestTemplate.exchange(MANUFACTURER_URL, HttpMethod.PUT, createHttpRequest(json), Manufacturer.class);
+
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.hasBody());
         assertNotNull(response.getBody());
+
         Manufacturer responseManufacturer = response.getBody();
+
         assertEquals(manufacturer.getId(), responseManufacturer.getId());
         assertEquals("Manufacturer EDITADO", responseManufacturer.getName());
         assertNotEquals(responseManufacturer.getName(), manufacturer.getName());
@@ -132,18 +136,17 @@ class ManufacturerRestControllerTest {
     void updateBadRequest() {
         String json = """
                 {
-                    "id": null,
+                    "id": &d,
                     "name": "Manufacturer EDITADO",
                    "cif": "2343235325G",
-                    "numEmployees": 550,
-                    "year": 1944
+                    "numEmployees": 6550,
+                    "year": 1644
                 }
                 """;
         ResponseEntity<Manufacturer> response =
                 testRestTemplate.exchange(MANUFACTURER_URL, HttpMethod.PUT, createHttpRequest(json), Manufacturer.class);
         assertEquals(400, response.getStatusCodeValue());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertFalse(response.hasBody());
     }
 
     @Test
@@ -164,6 +167,7 @@ class ManufacturerRestControllerTest {
         assertEquals(0, manufacturers.size());
     }
         @Test
+        @Disabled
         void deleteByIdSuccess() {
             Manufacturer manufacturer =createDemoManufacturer();
             String archive = MANUFACTURER_URL + "/" + manufacturer.getId();
@@ -185,6 +189,7 @@ class ManufacturerRestControllerTest {
 
     @DisplayName("comprobamos que no borra con Id null")
     @Test
+    @Disabled
     void deleteByIdNullTest() {
         Manufacturer manufacturer = createDemoManufacturer();
         String archive = MANUFACTURER_URL + "/9999" + manufacturer.getId();
