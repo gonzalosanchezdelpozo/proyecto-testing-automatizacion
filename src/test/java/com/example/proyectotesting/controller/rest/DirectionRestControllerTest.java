@@ -131,9 +131,71 @@ class DirectionRestControllerTest {
             //assertFalse(respuesta.hasBody());
         }
     }
-    @DisplayName("Comprobación actualizar una dirección")
-    @Test
-    void update() {
+    @Nested
+    class updateTest {
+        @DisplayName("Comprobación actualizar una dirección")
+        @Test
+        void updateOKTest() {
+            Direction direction = createDataDirections();
+            String json = String.format("""
+                {
+                    "id": %d,
+                    "street": "Calle actualizada con éxito",
+                    "postalCode": "350112",
+                    "city": "Las Palmas de Gran Canaria,
+                    "country": "España"
+                }
+                """, direction.getId());
+
+            System.out.println(json);
+            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, crearHttpRequest(json), Direction.class);
+            //assertEquals(200, respuesta.getStatusCodeValue());
+            //assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+            assertTrue(respuesta.hasBody());
+            assertNotNull(respuesta.getBody());
+            Direction responseDirection = respuesta.getBody();
+            assertEquals (direction.getId(),responseDirection.getId() );
+            //assertEquals("Calle actualizada con éxito", responseDirection.getStreet());
+            //assertNotEquals(responseDirection.getStreet(), direction.getStreet());
+        }
+
+        @DisplayName("Comprobar actualización con Id null")
+        @Test
+        void updateNullTest() {
+            Direction direction = createDataDirections();
+            String json = String.format("""
+                {
+                    "id": null,
+                    "street": "Calle actualizada con éxito",
+                    "postalCode": "350112",
+                    "city": "Las Palmas de Gran Canaria,
+                    "country": "España"
+                }
+                """, direction.getId());
+            System.out.println(json);
+            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, crearHttpRequest(json), Direction.class);
+            assertEquals(400, respuesta.getStatusCodeValue());
+            assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode());
+        }
+
+        @DisplayName("Comprobar que no actualiza con una Id no encontrada")
+        @Test
+        void updateIdNotFoundTest() {
+            Direction direction = createDataDirections();
+            String json = String.format("""
+                {
+                    "id": 999999,
+                    "street": "Calle actualizada con éxito",
+                    "postalCode": "350112",
+                    "city": "Las Palmas de Gran Canaria,
+                    "country": "España"
+                }
+                """, direction.getId());
+            System.out.println(json);
+            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, crearHttpRequest(json), Direction.class);
+            //assertEquals(404, respuesta.getStatusCodeValue());
+            //assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+        }
     }
 
     private Direction createDataDirections() {
