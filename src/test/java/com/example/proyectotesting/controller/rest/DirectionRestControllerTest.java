@@ -1,8 +1,7 @@
 package com.example.proyectotesting.controller.rest;
 
-import com.example.proyectotesting.entities.Category;
+
 import com.example.proyectotesting.entities.Direction;
-import com.example.proyectotesting.entities.Product;
 import com.example.proyectotesting.service.DirectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,8 +60,10 @@ class DirectionRestControllerTest {
         @Test
         void findOneOKTest() {
             Direction direction = createDataDirections();
+            //No se está guardando en el objeto direction y siempre es null
+            ResponseEntity<Direction> respuesta = testRestTemplate.getForEntity(Direction_URL+"/"+ direction.getId(), Direction.class);
 
-            ResponseEntity<Direction> respuesta =testRestTemplate.getForEntity(Direction_URL+"/"+direction.getId(), Direction.class);
+            System.out.println(direction.getStreet());
 
             //assertEquals(200, respuesta.getStatusCodeValue());
             //assertEquals(HttpStatus.OK, respuesta.getStatusCode());
@@ -105,7 +106,7 @@ class DirectionRestControllerTest {
                     "country": "España"
                 }
                 """;
-            ResponseEntity<Direction> respuesta =  testRestTemplate.postForEntity(Direction_URL, crearHttpRequest(json), Direction.class);
+            ResponseEntity<Direction> respuesta =  testRestTemplate.postForEntity(Direction_URL, createHttpRequest(json), Direction.class);
             //assertEquals(201, respuesta.getStatusCodeValue());
             //assertEquals(HttpStatus.CREATED, respuesta.getStatusCode());
             assertTrue(respuesta.hasBody());
@@ -125,7 +126,7 @@ class DirectionRestControllerTest {
                     "country": "España"
                 }
                 """;
-            ResponseEntity<Direction> respuesta=  testRestTemplate.postForEntity(Direction_URL, crearHttpRequest(json), Direction.class);
+            ResponseEntity<Direction> respuesta=  testRestTemplate.postForEntity(Direction_URL, createHttpRequest(json), Direction.class);
             assertEquals(400, respuesta.getStatusCodeValue());
             assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode());
             //assertFalse(respuesta.hasBody());
@@ -137,7 +138,7 @@ class DirectionRestControllerTest {
         @Test
         void updateOKTest() {
             Direction direction = createDataDirections();
-            String json = String.format("""
+            String json = """
                 {
                     "id": %d,
                     "street": "Calle actualizada con éxito",
@@ -145,10 +146,12 @@ class DirectionRestControllerTest {
                     "city": "Las Palmas de Gran Canaria,
                     "country": "España"
                 }
-                """, direction.getId());
+                """;
 
-            System.out.println(json);
-            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, crearHttpRequest(json), Direction.class);
+            System.out.println(direction.getId());
+
+            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, createHttpRequest(json), Direction.class);
+
             //assertEquals(200, respuesta.getStatusCodeValue());
             //assertEquals(HttpStatus.OK, respuesta.getStatusCode());
             assertTrue(respuesta.hasBody());
@@ -163,17 +166,17 @@ class DirectionRestControllerTest {
         @Test
         void updateNullTest() {
             Direction direction = createDataDirections();
-            String json = String.format("""
+            String json = """
                 {
-                    "id": null,
+                    "id": 1,
                     "street": "Calle actualizada con éxito",
                     "postalCode": "350112",
                     "city": "Las Palmas de Gran Canaria,
                     "country": "España"
                 }
-                """, direction.getId());
-            System.out.println(json);
-            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, crearHttpRequest(json), Direction.class);
+                """;
+            System.out.println(direction.getId());
+            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, createHttpRequest(json), Direction.class);
             assertEquals(400, respuesta.getStatusCodeValue());
             assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode());
         }
@@ -192,7 +195,7 @@ class DirectionRestControllerTest {
                 }
                 """, direction.getId());
             System.out.println(json);
-            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, crearHttpRequest(json), Direction.class);
+            ResponseEntity<Direction> respuesta = testRestTemplate.exchange(Direction_URL, HttpMethod.PUT, createHttpRequest(json), Direction.class);
             //assertEquals(404, respuesta.getStatusCodeValue());
             //assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
         }
@@ -211,12 +214,11 @@ class DirectionRestControllerTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<Direction> response =
-                testRestTemplate.postForEntity(Direction_URL, request, Direction.class);
+        ResponseEntity<Direction> response = testRestTemplate.postForEntity(Direction_URL, request, Direction.class);
         return response.getBody();
     }
 
-    private HttpEntity<String> crearHttpRequest(String json) {
+    private HttpEntity<String> createHttpRequest(String json) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
