@@ -35,16 +35,16 @@ public class CategoryRestController {
     @PostMapping("api/category")
     public ResponseEntity<Category> create(@RequestBody Category category) {
     if  (category.getId() != null)
-        ResponseEntity.badRequest().build();
+       return ResponseEntity.badRequest().build();// faltaba return
         Category cat=   categoryService.save(category);
     return ResponseEntity.ok(cat);
     }
-    @PutMapping("api/category/")
+    @PutMapping("api/category")
     public ResponseEntity<Category> update(@RequestBody Category category) {
         if  (category.getId() == null)
-            ResponseEntity.badRequest().build();
+          return  ResponseEntity.badRequest().build(); // faltaba el return
         if (!categoryService.existsById(category.getId()))
-        ResponseEntity.notFound().build();
+       return  ResponseEntity.notFound().build(); //faltaba el return
         Category result=   categoryService.save(category);
         return ResponseEntity.ok(result);
     }
