@@ -1,7 +1,7 @@
 package com.example.proyectotesting.patterns.structural.adapter;
 
 public class Tractor {
-	
+
 	private double speed;
 	
 	
@@ -29,6 +29,5 @@ public class Tractor {
 		}
 		
 	}
-
 
 }

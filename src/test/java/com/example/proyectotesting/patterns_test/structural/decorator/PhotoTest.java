@@ -1,5 +1,7 @@
-package com.example.proyectotesting.patterns.structural.decorator;
+package com.example.proyectotesting.patterns_test.structural.decorator;
 
+import com.example.proyectotesting.patterns.structural.decorator.DigitalPhoto;
+import com.example.proyectotesting.patterns.structural.decorator.Photo;
 import com.example.proyectotesting.patterns.structural.decorator.decoradores.EffectRetro;
 import com.example.proyectotesting.patterns.structural.decorator.decoradores.EffectVintage;
 import org.junit.jupiter.api.Test;

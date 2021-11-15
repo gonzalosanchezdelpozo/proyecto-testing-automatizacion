@@ -13,4 +13,3 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @SelectPackages("com.example.proyectotesting")
 public class SuitTest {
 }
-

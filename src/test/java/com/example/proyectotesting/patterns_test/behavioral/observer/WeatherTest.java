@@ -58,14 +58,26 @@ public class WeatherTest {
         weather.changeWeather(WeatherType.SUNNY);
         assertNotNull(weather);
 
-        WeatherObserver obs = new Computer();
-        obs.update(WeatherType.RAINY);
-        obs.update(WeatherType.CLOUDY);
-       assertNotNull(obs);
 
+    }
 
+    @Test
+    void notifyObserversTest(){
+        Weather aemet = new Weather();
 
+        WeatherObserver computer = new Computer();
+        aemet.addObserver(computer);
+        aemet.addObserver(new SmartPhone());
 
+        aemet.changeWeather(WeatherType.CLOUDY);
+        aemet.changeWeather(WeatherType.RAINY);
+        aemet.changeWeather(WeatherType.SUNNY);
+
+        aemet.removeObserver(computer);
+        aemet.changeWeather(WeatherType.SUNNY);
+
+        assertNotNull(computer);
+        assertNotNull(aemet);
     }
 
 

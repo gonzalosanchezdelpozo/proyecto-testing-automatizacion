@@ -33,6 +33,10 @@ class ProductRestControllerTest {
 
     }
 
+    /**
+     * Comprobamos que creando una base de datos demo, findAll es capaz de encontrar todos los
+     * test. Esperamos recibir un código 200 como respuesta (Status Ok)
+     */
 
     @Nested
  class findTests {
@@ -53,8 +57,11 @@ class ProductRestControllerTest {
            assertNotNull(products);
     assertTrue(products.size() >=3);
 
-
        }
+        /**
+         * Comprobamos que creando una base de datos demo, findById es capaz de encontrar un
+         * test en concreto. Esperamos recibir un código 200 como respuesta (Status Ok)
+         */
 @DisplayName("comprobamos buscar uno por ID de forma correcta")
        @Test
        void findOneOkTest() {
@@ -69,6 +76,10 @@ class ProductRestControllerTest {
     assertEquals(replyBody.getId(), product.getId());
 
        }
+        /**
+         * Comprobamos que findById no es capaz de encontrar un
+         * test en concreto. Esperamos recibir un código 404 como respuesta (Status Not Found)
+         */
 @DisplayName("comprobamos buscar uno Not Found")
        @Test
         void findOneNotFoundTest(){
@@ -79,7 +90,26 @@ class ProductRestControllerTest {
 
 
         }
+        /**
+         * Comprobamos que findById no es capaz de encontrar un
+         * test en concreto con id cero. Esperamos recibir un código 404 como respuesta (Status Not Found)
+         */
+        @DisplayName("comprobamos buscar uno con Id cero y no lo encuentra")
+        @Test
+        void findOneZeroTest(){
+            ResponseEntity<Product> badDemo= testRestTemplate.getForEntity(PRODUCTSURL +"/0", Product.class);
+            assertEquals(404, badDemo.getStatusCodeValue());
+            assertEquals(HttpStatus.NOT_FOUND, badDemo.getStatusCode());
+            assertFalse(badDemo.hasBody());
+
+
+        }
    }
+
+    /**
+     * Comprobamos que create  es capaz de crear un objeto.
+     * Esperamos recibir un código 201 como respuesta (Status creado)
+     */
  @Nested
  class saveTest {
    @DisplayName("comprobamos que crea correctamente")
@@ -102,6 +132,10 @@ ResponseEntity<Product> response=  testRestTemplate.postForEntity(PRODUCTSURL, c
        assertEquals("Product Test", product.getName());
 
      }
+        /**
+         * Comprobamos que Created no crea un nuevo producto cuando encuentra una ID.
+         * Esperamos recibir un código 400 como respuesta (BadRequest)
+         */
      @DisplayName("comprobamos que no crea con una badrequest")
      @Test
      void createBadRequestTest() {
@@ -119,6 +153,10 @@ ResponseEntity<Product> response=  testRestTemplate.postForEntity(PRODUCTSURL, c
          assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
          assertFalse(response.hasBody());
      }
+        /**
+         * Comprobamos que Update modifica  un producto cuando encuentra una ID.
+         * Esperamos recibir un código 200 como respuesta (Ok)
+         */
      @DisplayName("comprobamos que se modifica")
      @Test
      void updateOkTest() {
@@ -145,6 +183,10 @@ assertEquals (product.getId(),responseProduct.getId() );
 assertEquals("Product modified", responseProduct.getName());
 assertNotEquals(responseProduct.getName(), product.getName());
      }
+        /**
+         * Comprobamos que Update no modifica un producto cuando no encuentra una ID.
+         * Esperamos recibir un código 400 como respuesta (BadRequest)
+         */
  @DisplayName("comprobamos update con Id null")
      @Test
  void updateNullTest() {
@@ -164,6 +206,10 @@ assertNotEquals(responseProduct.getName(), product.getName());
      assertEquals(400, response.getStatusCodeValue());
      assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
  }
+        /**
+         * Comprobamos que Update no modifica un producto cuando no encuentra una ID fuera de rango.
+         * Esperamos recibir un código 400 como respuesta (BadRequest)
+         */
      @DisplayName("comprobamos update con Id no encontrada")
      @Test
      void updateIdNotFoundTest() {
@@ -185,6 +231,12 @@ assertNotEquals(responseProduct.getName(), product.getName());
      }
 
  }
+
+    /**
+     * Comprobamos que DeleteId borra un producto cuando encuentra una ID.
+     * Esperamos recibir un código 200 como respuesta (Ok) y
+     * luego verificamos que se borro.
+     */
  @Nested
  class deteleTests {
     @DisplayName("comprobamos que borra correctamente con una Id")
@@ -203,6 +255,10 @@ assertNotEquals(responseProduct.getName(), product.getName());
          assertFalse(response2.hasBody());
 
      }
+        /**
+         * Comprobamos que DeleteId no borra un producto cuando encuentra una ID nula.
+         * Esperamos recibir un código 404 como respuesta (Not Found)
+         */
 @DisplayName("comprobamos que no borra con Id null")
      @Test
      void deleteByIdNullTest() {
@@ -218,6 +274,10 @@ assertNotEquals(responseProduct.getName(), product.getName());
 
 
      }
+        /**
+         * Comprobamos que DeleteAll borra todos los productos
+         * y luego verificamos que se borros.
+         */
 @DisplayName("comprobamos que borramos todos")
          @Test
      void deleteAll() {
@@ -235,26 +295,8 @@ assertNotEquals(responseProduct.getName(), product.getName());
     assertEquals(0, products.size());
      }
 
-     /*@DisplayName("comprobamos que borramos todos")
-     @Test
-     void deleteAllConflictTest() {
-         testRestTemplate.delete(PRODUCTSURL);
-         ResponseEntity<Product[]> response = testRestTemplate.exchange(PRODUCTSURL,HttpStatus.CONFLICT, createDemoProduct(), Product[].class);
-
-         List<Product> products = List.of(response.getBody());
-
-         assertTrue(products.size() == 0);
-         testRestTemplate.delete(PRODUCTSURL);
-         response = testRestTemplate.getForEntity(PRODUCTSURL, Product[].class);
-         assertTrue(products.isEmpty());
-         assertEquals(409, response.getStatusCodeValue());
-         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 
 
-
-     }
-
-      */
  }
 
     private Product createDemoProduct(){
